@@ -9,13 +9,13 @@ from src.utils import Discretizer
 
 def get_model():
     return torch.nn.Sequential(
-            torch.nn.Linear(2, 512),
-            torch.nn.ReLU(),
-            torch.nn.Linear(512, 1)
-        ).double()
+        torch.nn.Linear(2, 512),
+        torch.nn.ReLU(),
+        torch.nn.Linear(512, 1)
+    ).double()
 
 def get_discretizer(bucket):
-    Discretizer(
+    return Discretizer(
         min_points=[-1, -5],
         max_points=[1, 5],
         buckets=[bucket, bucket],
