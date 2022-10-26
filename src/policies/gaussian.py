@@ -138,3 +138,24 @@ class GaussianPolicyNN:
         self.opt_critic.zero_grad()
         loss_value.backward()
         self.opt_critic.step()
+
+
+def get_nn_policy(env, mu, v, lr_actor, lr_critic):
+    return GaussianPolicyNN(
+            env,
+            mu,
+            v,
+            lr_actor=1e-4,
+            lr_critic=1e-4
+        )
+
+
+def get_lr_policy(env, discretizer_actor, discretizer_critic, k, lr_actor, lr_critic):
+    return GaussianPolicyLR(
+        env,
+        discretizer_actor,
+        discretizer_critic,
+        k=4,
+        lr_actor=2e-3,
+        lr_critic=1e-1
+    )
