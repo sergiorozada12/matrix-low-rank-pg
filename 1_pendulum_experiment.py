@@ -24,6 +24,8 @@ def get_discretizer(bucket):
 
 if __name__ == "__main__":
     env = CustomPendulumEnv()
+    discretizer_actor = get_discretizer(10)
+    discretizer_critic = get_discretizer(16)
 
     reward_nn = []
     reward_lr = []
@@ -36,8 +38,6 @@ if __name__ == "__main__":
         reward_nn.append(totals)
 
         # Low-rank matrix
-        discretizer_actor = get_discretizer(10)
-        discretizer_critic = get_discretizer(16)
         agent = get_lr_policy(env, discretizer_actor, discretizer_critic, lr_actor=2e-3, lr_critic=1e-1)
         _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=5000, T=100)
         reward_lr.append(totals)
