@@ -62,7 +62,6 @@ class GaussianPolicyLR:
         return torch.clamp(a_t, 0.0, 1.0) if self.bool_output else a_t
 
     def learn(self, states, actions, returns):
-        actions = torch.tensor(actions)
         returns = torch.tensor(returns)
         states = np.array(states)
 
@@ -86,7 +85,7 @@ class GaussianPolicyLR:
 
 
 class GaussianPolicyNN:
-    def __init__(self, env, mu, v, lr_actor=1e-2, lr_critic=1e-2, bool_output=False):        
+    def __init__(self, env, mu, v, lr_actor=1e-2, lr_critic=1e-2, bool_output=False):
         self.bool_output = bool_output
 
         self.mu = mu
@@ -117,7 +116,6 @@ class GaussianPolicyNN:
         return torch.clamp(a_t, 0.0, 1.0) if self.bool_output else a_t
 
     def learn(self, states, actions, returns):
-        actions = torch.tensor(actions)
         returns = torch.tensor(returns)
         states = torch.tensor(states)
 
@@ -126,7 +124,7 @@ class GaussianPolicyNN:
             advantages = returns - values
 
         # Actor
-        log_prob = self.pi(states).log_prob(actions.reshape(-1, 1))
+        log_prob = self.pi(states).log_prob(actions)
         loss_action = torch.mean(-log_prob*advantages)
         self.opt_actor.zero_grad()
         loss_action.backward()
@@ -140,22 +138,24 @@ class GaussianPolicyNN:
         self.opt_critic.step()
 
 
-def get_nn_policy(env, mu, v, lr_actor, lr_critic):
+def get_nn_policy(env, mu, v, lr_actor, lr_critic, bool_output=False):
     return GaussianPolicyNN(
             env,
             mu,
             v,
-            lr_actor=1e-4,
-            lr_critic=1e-4
+            lr_actor=lr_actor,
+            lr_critic=lr_critic,
+            bool_output=bool_output
         )
 
 
-def get_lr_policy(env, discretizer_actor, discretizer_critic, k, lr_actor, lr_critic):
+def get_lr_policy(env, discretizer_actor, discretizer_critic, k, lr_actor, lr_critic, bool_output=False):
     return GaussianPolicyLR(
         env,
         discretizer_actor,
         discretizer_critic,
-        k=4,
-        lr_actor=2e-3,
-        lr_critic=1e-1
+        k=k,
+        lr_actor=lr_actor,
+        lr_critic=lr_critic,
+        bool_output=bool_output
     )

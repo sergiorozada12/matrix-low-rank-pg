@@ -1,4 +1,4 @@
-import numpy as np
+import torch
 import gym
 
 from src.utils import calculate_returns
@@ -27,9 +27,7 @@ def REINFORCE(env, agent, gamma=0.99, epochs=100, T=1000):
 
             s_t = s_t_next
 
-        if not isinstance(env.action_space, gym.spaces.Discrete):
-            actions = np.array(actions).reshape(-1, 1)
-
+        actions = torch.tensor(actions).reshape(-1, 1)
         returns = calculate_returns(rewards, gamma)
         agent.learn(states, actions, returns)
 

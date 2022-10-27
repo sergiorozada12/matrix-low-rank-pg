@@ -38,7 +38,7 @@ if __name__ == "__main__":
         reward_nn.append(totals)
 
         # Low-rank matrix
-        agent = get_lr_policy(env, discretizer_actor, discretizer_critic, lr_actor=2e-1, lr_critic=1e-1)
+        agent = get_lr_policy(env, discretizer_actor, discretizer_critic, k=1, lr_actor=2e-1, lr_critic=1e-1)
         _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=500, T=100)
         reward_lr.append(totals)
 

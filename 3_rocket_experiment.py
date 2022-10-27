@@ -29,16 +29,16 @@ if __name__ == "__main__":
 
     reward_nn = []
     reward_lr = []
-    for _ in range(100):
+    for _ in range(2):
         # Neural Network
         mu = get_model()
         v = get_model()
-        agent = get_nn_policy(env, mu, v, lr_actor=1e-4, lr_critic=1e-4)
+        agent = get_nn_policy(env, mu, v, lr_actor=1e-4, lr_critic=1e-4, bool_output=True)
         _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=15_000, T=1_000)
         reward_nn.append(totals)
 
         # Low-rank matrix
-        agent = get_lr_policy(env, discretizer_actor, discretizer_critic, lr_actor=8e-3, lr_critic=1e-1)
+        agent = get_lr_policy(env, discretizer_actor, discretizer_critic, lr_actor=8e-3, lr_critic=1e-1, k=2, bool_output=True)
         _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=15_000, T=1_000)
         reward_lr.append(totals)
 
