@@ -53,4 +53,4 @@ if __name__ == "__main__":
     ax[2].legend()
 
     plt.tight_layout()
-    plt.show()
+    fig.savefig('figures/fig1.png', dpi=300)
