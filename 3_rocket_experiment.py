@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     reward_nn = []
     reward_lr = []
-    for _ in range(2):
+    for _ in range(100):
         # Neural Network
         mu = get_model()
         v = get_model()

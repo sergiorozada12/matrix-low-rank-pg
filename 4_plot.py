@@ -1,7 +1,7 @@
 import pickle
 import numpy as np
 
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import seaborn as sns
 
 sns.set_style("whitegrid")
@@ -11,15 +11,15 @@ ALPHA = .9
 
 def load_data(path):
     with open(path,'rb') as f:
-        return np.median(pickle.load(f))
+        return np.median(pickle.load(f), axis=0)
 
 if __name__ == "__main__":
-    pend_nn = load_data('pend_nn.pkl')
-    pend_lr = load_data('pend_lr.pkl')
-    acro_nn = load_data('acro_nn.pkl')
-    acro_lr = load_data('acro_lr.pkl')
-    rock_nn = load_data('rock_nn.pkl')
-    rock_lr = load_data('rock_lr.pkl')
+    pend_nn = load_data('results/pend_nn.pkl')
+    pend_lr = load_data('results/pend_lr.pkl')
+    acro_nn = load_data('results/acro_nn.pkl')
+    acro_lr = load_data('results/acro_lr.pkl')
+    rock_nn = load_data('results/rock_nn.pkl')
+    rock_lr = load_data('results/rock_lr.pkl')
 
     pend_time = np.arange(pend_nn.size)
     acro_time = np.arange(acro_nn.size)
