@@ -8,7 +8,10 @@ This paper has been submitted for publication in *ICASSP 2023*.
 
 > This paper presents low-rank matrix models for Policy Gradient (PG) methods. They are easy to tune, and parametrize. They outperform neural networks in terms of size, and returns.
 
-![](figures/fig1.png){width=50%}
+<p align="center">
+    <img src="figures/fig1.png" alt="drawing" width="400"/>
+</p>
+
 
 *Median return per episode in three standard RL problems:
 (a) the pendulum, (b) the acrobot, and (d) the Goddard problem.*
