@@ -62,7 +62,8 @@ class GaussianPolicyLR:
         return torch.clamp(a_t, 0.0, 1.0) if self.bool_output else a_t
 
     def learn(self, states, actions, returns):
-        returns = torch.tensor(returns)
+        actions = torch.as_tensor(actions).double()
+        returns = torch.as_tensor(returns).double()
         states = np.array(states)
 
         values = self.v(states)
@@ -70,7 +71,7 @@ class GaussianPolicyLR:
             advantages = returns - values
 
         # Actor
-        log_prob = self.pi(states).log_prob(actions)
+        log_prob = self.pi(states).log_prob(actions).squeeze()
         loss_action = torch.mean(-log_prob*advantages)
         self.opt_actor.zero_grad()
         loss_action.backward()
@@ -78,7 +79,7 @@ class GaussianPolicyLR:
 
         # Critic
         loss_fn = torch.nn.MSELoss()
-        loss_value = loss_fn(values.double(), returns.double())
+        loss_value = loss_fn(values, returns)
         self.opt_critic.zero_grad()
         loss_value.backward()
         self.opt_critic.step()
@@ -104,27 +105,28 @@ class GaussianPolicyNN:
 
         log_sigma = self.log_sigma
         sigma = torch.exp(log_sigma)
-        pi = torch.distributions.MultivariateNormal(mu, torch.diag(sigma))
+        pi = torch.distributions.Normal(mu, sigma)
         return pi
 
     def v(self, s_t):
         s_t_tensor = torch.as_tensor(s_t).double()
-        return self.value(s_t_tensor)
+        return self.value(s_t_tensor).squeeze()
 
     def act(self, s_t):
         a_t = self.pi(s_t).sample()
         return torch.clamp(a_t, 0.0, 1.0) if self.bool_output else a_t
 
     def learn(self, states, actions, returns):
-        returns = torch.tensor(returns)
-        states = torch.tensor(states)
+        actions = torch.as_tensor(actions).double()
+        returns = torch.as_tensor(returns).double()
+        states = np.array(states)
 
         values = self.v(states)
         with torch.no_grad():
             advantages = returns - values
 
         # Actor
-        log_prob = self.pi(states).log_prob(actions)
+        log_prob = self.pi(states).log_prob(actions).squeeze()
         loss_action = torch.mean(-log_prob*advantages)
         self.opt_actor.zero_grad()
         loss_action.backward()
@@ -132,7 +134,7 @@ class GaussianPolicyNN:
 
         # Critic
         loss_fn = torch.nn.MSELoss()
-        loss_value = loss_fn(values.double(), returns.reshape(-1, 1).double())
+        loss_value = loss_fn(values, returns)
         self.opt_critic.zero_grad()
         loss_value.backward()
         self.opt_critic.step()

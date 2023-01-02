@@ -27,7 +27,6 @@ def REINFORCE(env, agent, gamma=0.99, epochs=100, T=1000):
 
             s_t = s_t_next
 
-        actions = torch.tensor(actions).reshape(-1, 1)
         returns = calculate_returns(rewards, gamma)
         agent.learn(states, actions, returns)
 
