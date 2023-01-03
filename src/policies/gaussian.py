@@ -98,7 +98,7 @@ class GaussianPolicyNN:
 
     def pi(self, s_t):
         s_t = torch.as_tensor(s_t).double()
-        mu = self.mu(s_t)
+        mu = self.mu(s_t).squeeze()
 
         if self.bool_output:
             mu = torch.nn.Sigmoid()(mu)
@@ -126,7 +126,7 @@ class GaussianPolicyNN:
             advantages = returns - values
 
         # Actor
-        log_prob = self.pi(states).log_prob(actions).squeeze()
+        log_prob = self.pi(states).log_prob(actions)
         loss_action = torch.mean(-log_prob*advantages)
         self.opt_actor.zero_grad()
         loss_action.backward()
