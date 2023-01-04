@@ -1,7 +1,5 @@
 import numpy as np
 import gym
-from gym.envs.classic_control import rendering
-
 # Implementation by osannolik: https://github.com/osannolik/gym-goddard
 # Modified by Sergio Rozada
 
@@ -140,67 +138,6 @@ class CustomGoddardEnv(gym.Env):
         self._h_max = self._r.H0
         self._thrust_last = None
         return self._observation()
-
-    def render(self, mode='human'):
-        _, h, m = self._observation()
-
-        if self.viewer is None:
-            y = self._r.H_MAX_RENDER
-            y0 = self._r.H0
-            GY = (y-y0)/20
-            Y = y-y0+GY
-            H = Y/10
-            W = H/10
-            self.flame_offset = W/2
-
-            self.viewer = rendering.Viewer(500, 500)
-            self.viewer.set_bounds(left=-Y/2, right=Y/2, bottom=y-Y, top=y)
-
-            ground = rendering.make_polygon([(-Y/2,y0-GY), (-Y/2,y0), (Y/2,y0), (Y/2,y0-GY)])
-            ground.set_color(.3, .6, .3)
-            pad = rendering.make_polygon([(-3*W,y0-GY/3), (-3*W,y0), (3*W,y0), (3*W,y0-GY/3)])
-            pad.set_color(.6, .6, .6)
-
-            rocket = rendering.make_polygon([(-W/2,0), (-W/2,H), (W/2,H), (W/2,0)], filled=True)
-            rocket.set_color(0, 0, 0)
-            self.r_trans = rendering.Transform()
-            rocket.add_attr(self.r_trans)
-
-            self.make_fuel_poly = lambda mass: [
-                (-W/2, 0),
-                (-W/2, H*((mass-self._r.M1)/(self._r.M0-self._r.M1))),
-                (W/2,  H*((mass-self._r.M1)/(self._r.M0-self._r.M1))),
-                (W/2,0)
-            ]
-            self.fuel = rendering.make_polygon(self.make_fuel_poly(m), filled=True)
-            self.fuel.set_color(.8, .1, .14)
-            self.fuel.add_attr(self.r_trans)
-
-            flame = rendering.make_circle(radius=W, res=30)
-            flame.set_color(.96, 0.85, 0.35)
-            self.f_trans = rendering.Transform()
-            flame.add_attr(self.f_trans)
-
-            flame_outer = rendering.make_circle(radius=2*W, res=30)
-            flame_outer.set_color(.95, 0.5, 0.2)
-            self.fo_trans = rendering.Transform()
-            flame_outer.add_attr(self.fo_trans)
-
-            for g in [ground, pad, rocket, self.fuel, flame_outer, flame]:
-                self.viewer.add_geom(g)
-
-        self.r_trans.set_translation(newx=0, newy=h)
-        self.f_trans.set_translation(newx=0, newy=h)
-        self.fo_trans.set_translation(newx=0, newy=h-self.flame_offset)
-
-        self.fuel.v = self.make_fuel_poly(m)
-
-        s = 0 if self._thrust_last is None else self._thrust_last/self._r.THRUST_MAX
-
-        self.f_trans.set_scale(newx=s, newy=s)
-        self.fo_trans.set_scale(newx=s, newy=s)
-
-        return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
     def close(self):
         if self.viewer:
