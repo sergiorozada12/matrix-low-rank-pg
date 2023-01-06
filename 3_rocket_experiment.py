@@ -33,17 +33,17 @@ if __name__ == "__main__":
         # Neural Network
         mu = get_model()
         v = get_model()
-        agent = get_nn_policy(env, mu, v, lr_actor=1e-4, lr_critic=1e-4, bool_output=True)
-        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=15_000, T=1_000)
+        agent = get_nn_policy(env, mu, v, lr_actor=1e-2, lr_critic=1e-2, bool_output=True)
+        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=30_000, T=1_000)
         reward_nn.append(totals)
 
         # Low-rank matrix
-        agent = get_lr_policy(env, discretizer_actor, discretizer_critic, lr_actor=8e-3, lr_critic=1e-1, k=2, bool_output=True)
-        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=15_000, T=1_000)
+        agent = get_lr_policy(env, discretizer_actor, discretizer_critic, lr_actor=1e-2, lr_critic=1e-1, k=2, bool_output=True)
+        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=30_000, T=1_000)
         reward_lr.append(totals)
 
-    with open('results/rock_nn.pkl','wb') as f:
-        pickle.dump(reward_nn, f)
+        with open('results/rock_nn.pkl','wb') as f:
+            pickle.dump(reward_nn, f)
 
-    with open('results/rock_lr.pkl','wb') as f:
-        pickle.dump(reward_lr, f)
+        with open('results/rock_lr.pkl','wb') as f:
+            pickle.dump(reward_lr, f)

@@ -33,13 +33,13 @@ if __name__ == "__main__":
         # Neural Network
         mu = get_model()
         v = get_model()
-        agent = get_nn_policy(env, mu, v, lr_actor=1e-4, lr_critic=1e-4)
-        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=5000, T=100)
+        agent = get_nn_policy(env, mu, v, lr_actor=1e-3, lr_critic=1e-3)
+        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=1000, T=100)
         reward_nn.append(totals)
 
         # Low-rank matrix
         agent = get_lr_policy(env, discretizer_actor, discretizer_critic, k=4, lr_actor=1e-2, lr_critic=1e-1)
-        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=5000, T=100)
+        _, totals, _ = REINFORCE(env, agent, gamma=0.99, epochs=1000, T=100)
         reward_lr.append(totals)
 
     with open('results/pend_nn.pkl','wb') as f:
