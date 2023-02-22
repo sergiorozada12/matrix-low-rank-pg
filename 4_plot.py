@@ -31,21 +31,21 @@ if __name__ == "__main__":
     plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
     plt.rc('legend', fontsize=16)    # legend fontsize
 
-    ax[0].plot(pend_time, pend_lr, color='g', label='MFPG - 160 params.', alpha=ALPHA)
+    ax[0].plot(pend_time, pend_lr, color='g', label='LRPG - 160 params.', alpha=ALPHA)
     ax[0].plot(pend_time, pend_nn, color='r', label='RVFB - 4098 params.', alpha=ALPHA)
     ax[0].set_ylabel('(a) Return')
     ax[0].set_xlabel('Episodes')
     ax[0].set_xlim(0, 1000)
     ax[0].legend()
 
-    ax[1].plot(acro_time, acro_lr, color='g', label='MFPG - 16 params.', alpha=ALPHA)
+    ax[1].plot(acro_time, acro_lr, color='g', label='LRPG - 16 params.', alpha=ALPHA)
     ax[1].plot(acro_time, acro_nn, color='r', label='RVFB - 386 params.', alpha=ALPHA)
     ax[1].set_ylabel('(b) Return')
     ax[1].set_xlabel('Episodes')
     ax[1].set_xlim(0, 500)
     ax[1].legend()
 
-    ax[2].plot(rock_time, rock_lr, color='g', label='MFPG - 80', alpha=ALPHA)
+    ax[2].plot(rock_time, rock_lr, color='g', label='LRPG - 80', alpha=ALPHA)
     ax[2].plot(rock_time, rock_nn, color='r', label='RVFB - 1282 params.', alpha=ALPHA)
     ax[2].set_ylabel('(c) Return')
     ax[2].set_xlabel('Episodes')
