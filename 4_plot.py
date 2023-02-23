@@ -1,6 +1,5 @@
 import pickle
 import numpy as np
-from scipy.spatial import ConvexHull
 
 import matplotlib.pyplot as plt
 import seaborn as sns
