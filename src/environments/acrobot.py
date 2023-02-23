@@ -5,7 +5,7 @@ from gym.envs.classic_control.acrobot import AcrobotEnv, wrap, bound, rk4
 class CustomAcrobotEnv(AcrobotEnv):
     def step(self, a):
         s = self.state
-        torque = np.clip(a, -10, 10)
+        torque = np.clip(a, -2, 2)
 
         s_augmented = np.append(s, torque)
         ns = rk4(self._dsdt, s_augmented, [0, self.dt])

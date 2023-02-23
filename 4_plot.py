@@ -1,5 +1,6 @@
 import pickle
 import numpy as np
+from scipy.spatial import ConvexHull
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -7,19 +8,33 @@ import seaborn as sns
 sns.set_style("whitegrid")
 
 ALPHA = .9
+ALPHA_BACK = .2
 
 
-def load_data(path):
+def load_data(path, k=1):
     with open(path,'rb') as f:
-        return np.median(pickle.load(f), axis=0)
+        data = pickle.load(f)
+
+        median = np.median(data, axis=0)
+        lower = np.percentile(data, 25, axis=0)
+        upper = np.percentile(data, 75, axis=0)
+
+        upper = np.max(np.lib.stride_tricks.sliding_window_view(upper, k), axis=1)
+        lower = np.min(np.lib.stride_tricks.sliding_window_view(lower, k), axis=1)
+
+        pad_width = ((k)//2, (k-1)//2)
+        lower = np.pad(lower, pad_width, mode='edge')
+        upper = np.pad(upper, pad_width, mode='edge')
+
+        return median, lower, upper
 
 if __name__ == "__main__":
-    pend_nn = load_data('results/pend_nn.pkl')
-    pend_lr = load_data('results/pend_lr.pkl')
-    acro_nn = load_data('results/acro_nn.pkl')
-    acro_lr = load_data('results/acro_lr.pkl')
-    rock_nn = load_data('results/rock_nn.pkl')
-    rock_lr = load_data('results/rock_lr.pkl')
+    pend_nn, pend_nn_low, pend_nn_up = load_data('results/pend_nn.pkl')
+    pend_lr, pend_lr_low, pend_lr_up = load_data('results/pend_lr.pkl')
+    acro_nn, acro_nn_low, acro_nn_up = load_data('results/acro_nn.pkl')
+    acro_lr, acro_lr_low, acro_lr_up = load_data('results/acro_lr.pkl')
+    rock_nn, rock_nn_low, rock_nn_up = load_data('results/rock_nn.pkl', k=20)
+    rock_lr, rock_lr_low, rock_lr_up = load_data('results/rock_lr.pkl', k=20)
 
     pend_time = np.arange(pend_nn.size)
     acro_time = np.arange(acro_nn.size)
@@ -32,25 +47,31 @@ if __name__ == "__main__":
     plt.rc('legend', fontsize=16)    # legend fontsize
 
     ax[0].plot(pend_time, pend_lr, color='g', label='LRPG - 160 params.', alpha=ALPHA)
+    ax[0].fill_between(pend_time, pend_lr_low, pend_lr_up, color='g', alpha=ALPHA_BACK)
     ax[0].plot(pend_time, pend_nn, color='r', label='RVFB - 4098 params.', alpha=ALPHA)
+    ax[0].fill_between(pend_time, pend_nn_low, pend_nn_up, color='r', alpha=ALPHA_BACK)
     ax[0].set_ylabel('(a) Return')
     ax[0].set_xlabel('Episodes')
     ax[0].set_xlim(0, 1000)
     ax[0].legend()
 
     ax[1].plot(acro_time, acro_lr, color='g', label='LRPG - 16 params.', alpha=ALPHA)
+    ax[1].fill_between(acro_time, acro_lr_low, acro_lr_up, color='g', alpha=ALPHA_BACK)
     ax[1].plot(acro_time, acro_nn, color='r', label='RVFB - 386 params.', alpha=ALPHA)
+    ax[1].fill_between(acro_time, acro_nn_low, acro_nn_up, color='r', alpha=ALPHA_BACK)
     ax[1].set_ylabel('(b) Return')
     ax[1].set_xlabel('Episodes')
-    ax[1].set_xlim(0, 500)
+    ax[1].set_xlim(0, 1000)
     ax[1].legend()
 
     ax[2].plot(rock_time, rock_lr, color='g', label='LRPG - 80', alpha=ALPHA)
+    ax[2].fill_between(rock_time, rock_lr_low, rock_lr_up, color='g', alpha=ALPHA_BACK)
     ax[2].plot(rock_time, rock_nn, color='r', label='RVFB - 1282 params.', alpha=ALPHA)
+    ax[2].fill_between(rock_time, rock_nn_low, rock_nn_up, color='r', alpha=ALPHA_BACK)
     ax[2].set_ylabel('(c) Return')
     ax[2].set_xlabel('Episodes')
     ax[2].set_xlim(0, 30000)
     ax[2].legend()
 
     plt.tight_layout()
-    fig.savefig('figures/fig2.png', dpi=300)
+    fig.savefig('figures/fig1.png', dpi=300)
