@@ -71,7 +71,7 @@ if __name__ == "__main__":
         ax[1].tick_params(axis='both', which='major', labelsize=14)
         ax[1].grid()
 
-        ax[2].plot(rock_time, rock_lr, color='g', label='LRPG - 80', alpha=ALPHA)
+        ax[2].plot(rock_time, rock_lr, color='g', label='LRPG - 80 params.', alpha=ALPHA)
         ax[2].fill_between(rock_time, rock_lr_low, rock_lr_up, color='g', alpha=ALPHA_BACK)
         ax[2].plot(rock_time, rock_nn, color='r', label='RVFB - 1282 params.', alpha=ALPHA)
         ax[2].fill_between(rock_time, rock_nn_low, rock_nn_up, color='r', alpha=ALPHA_BACK)
