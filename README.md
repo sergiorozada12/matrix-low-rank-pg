@@ -4,7 +4,7 @@ by
 Sergio Rozada,
 and Antonio G. Marques
 
-This code belongs to a paper that has been submitted for publication in *ICASSP 2023*.
+This code belongs to a paper that has been published in *ICASSP 2023*.
 
 > The associated paper presents low-rank matrix models for Policy Gradient (PG) methods. They are easy to tune, and parametrize. They outperform neural networks in terms of size, and returns.
 
